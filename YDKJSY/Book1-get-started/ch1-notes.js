@@ -6,7 +6,7 @@
 - KEY - approach JS with a fresh set of eyes, attempt to understand how every line of code works/WHY it works
 - Not possible to fully know JS, but something to strive for
 
-The Mission:
+THE MISSION:
 - 'You will always be more effective in your development work if you more completely understand how your code works'
 - - 'Good enough to work' should never be just good enough
 - Write every line of code with intention and clairty
@@ -16,44 +16,44 @@ The Path:
 - The more you understand JS, the more questions you will ask and the more you will have to explore
 */
 
-/**Chapter 1 - What is Javascript?
+/**CHAPTER 1 - WHAT IS JAVASCRIPT?
 
-About this book:
+ABOUT THIS BOOK:
 - Knowing JS is not a destination, but a direction
 - All of JS is founded on three fundamental pillars - Scopes/Closures, Prototypes/Objects, Types/Coercion 
 - A good start always depends on a solid first step
 
-What's with the name?
+WHAT'S WITH THE NAME?
 - JavaScript was voted on, was intended to be used by Java programmers
 - 'Script' was used at the time to refer to lightweight programs
 - Marketing ploy to position it as a better alternative to Java
 - NOT a variant of the Java language
 
-Language Specification
+LANGUAGE SPECIFICATION
 - JS's syntax and behaviors are defined in the ES specification
 - TC39 comittee is the one that meets and decides on JS specifications
 - Generally meets about every month
 - Voice of every TC39 member determines what direction JS will take
 
 
-The Web Rules Everything About JS
+THE WEB RULES EVERYTHING ABOUT JS
 - How JS is implemented for web browsers is really the only reality that matters
 
 
-Not All (Web) JS
+NOT ALL (WEB) JS
 - alert("Hello, world!"); is not technically a JS program, not included in JS specification
 - Various JS environments add APIs to global scope of your JS programs
     - Tinhs like JS engines, Node.js, etc.
 - console.log() is not actually defined in JS specs, but have universal utility
 
-It's Not Always Js
+IT'S NOT ALWAYS JS
 - console/REPL in browser's DevTools is not a straightforward JS environment
     - Are just tools for developers
     - Can't treat the console as a true JS environment
 - Above tools will not always adhere to the nuances of JS
 - KEY - think of the console as a JS approximation
 
-Many Faces
+MANY FACES
 - 'Paradigm' - refers to a broad mindset to structuring code
 - Typical paradigm-level code categories - Procedural, Object-Oriented, and Functional programming
     - Procedural - organizes code in top-down, linear progression, usually collected together in related units called procedures
@@ -63,7 +63,7 @@ Many Faces
 - Above are orientations for how programmers approach problems and solutions
 - KEY - JavaScript is definitely a multi-paradigm language (can chose paradigm on a line-by-line basis)
 
-Backwards and Forwards
+BACKWARDS AND FORWARDS
 - Javascript - guided by preservation of backwards compatibility
 - Backwards Compatibility - means once something is accepted as official JS, there will not be a future change
 in the language that will make that new code become invalid
@@ -78,7 +78,7 @@ if it were to run an older version of JS
     - JS is not forwards compatible 
     - CSS and HTML are forwards compatible
 
-Jumping the Gaps
+JUMPING THE GAPS
 - If you run a program that uses an ES2019 feature in an engine from 2016, your program will most likely crash
 - For new/incompatible syntax - solution is transpiling
     - Transpiling - common version is Babel - converts unrecognized newer JS syntax to an older version, to allow
@@ -114,7 +114,7 @@ if (something) {
 - Strongly recommended that developers use latest version of JS so their code is clean
 - Should always focus on writing clean/new syntax forms, and let tools produce forwards compatibility
 
-Filling the Gaps:
+FILLING THE GAPS:
 - For an API method that was only recently added, most common solution is to add a polyfill, or ('shim')
     -Stands in and acts as if older environment already had it named
 Example: */
@@ -154,4 +154,66 @@ if (!Promise.prototype.finally) {
     };
 }
 /**KEY - use ES-Shim npm package, gives you tons of shims to use for newer methods
-- Transpilers such as Babel usually  */
+- Transpilers such as Babel usually input polyfills/shims for you
+
+WHAT IS AN INTERPRETATION?
+- Is JS code an interpreted script or a compiled program?
+- Majority opinion - is an interpreted/scripting language
+    - Truth is more complicated than that
+- Why is it important to know if JS is compiled or interpreted?
+    Has to do with how errors are handled
+- KEY - scripted/interpreted languages - error on line 5 of a program wont be discovered until lines 1 through 4 
+have already been executed
+- Javascript - is parsed before it is executed 
+    -Calls for statically determined errors in code (duplicate parameter names) to be reported before code 
+    starts executing
+    
+- SO, JS is a parsed langugae - but is it compiled?
+- Answer is closer to yes than no - parsed JS is converted to a binary form, and that code is then executed
+    - This compiling produces binary byte code, which is then handed to JS virtual machine
+    
+- Entire flow of a JS source program:
+    1) Program leaves dev's editor, and is transpiled by Babel
+    2) JS gets packed by Webpack/other processes and gets delivered to the JS engine
+    3) JS Parses code to an AST(Abstract Syntax Tree) (PARSING)
+    4) Engine converts AST to a binary-byte code representation, which is then refined/compiled even further (COMPILING)
+    5) Javascript virtual machine executes the program
+
+- JS is therefore mostly a compiled language
+- Since JS is compiled, we are informed of static errors (bad syntax) before our code is executed
+
+WEB ASSEMBLY (WASM)
+-Performance determines a significant amount of JS's evolution
+- WASM - is similar to ASM.js, which was used to transmute Unreal Engine coded in C to Javascript
+- WASM original intent - provide a path for non-JS programs to be run in JS engine
+- WASM - motivated by performance improvements
+- WASM removes the pressure from JS developers to port other languages to be able to be used on the web
+- WASM augments what the web and JS can accomplish 
+
+STRICLY SPEAKING
+- ES5 - Javascript added strict mode as an opt-in mechanism for encouraging better JS programs
+- Strict mode still isn't the default for many JS programmers
+- Why strict mode? - Gives the JS engine the best chance to optimize and efficiently run code
+- Most strict mode controls - in form of early errors that are thrown at compile time (before code is run)
+- Example - strict mode restricts two parameters to be labelled the same
+- Strict mode should be your default, and should be COMFORTABLE for you to code in
+
+-TO SWITCH ON STRICT MODE - at top of the file, insert:*/
+"use strict"; //must be done for each file
+//Make sure nothing is placed before strict mode
+
+/**
+-Strict mode can also be turned on per function: */
+function someOperations() {
+    "use strict";
+
+    //All code here will run in strict mode
+};
+/** Have to pick either function-level strict mode, or file-level strict mode
+- Strict mode in JS is largely the de facto default, even though it isn't the actual default
+
+DEFINED 
+- JS is an implementation of the ECMAScript standard which is guided by the TC398 comittee
+    -JS runs on browsers and other environments such as node.js
+- JS is a multi-paradigm language, syntax/capabilities allow the developer to mix and match paradigms
+- JS is a compiled language - meaning the tools process and verify a program before it executes*/
