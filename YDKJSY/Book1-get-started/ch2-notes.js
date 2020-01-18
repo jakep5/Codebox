@@ -182,7 +182,28 @@ null === undefined //false
 - Another way to describe '===' comparisons is "checking both the value and the type"
     -Specifically, === disallows any COERCION, or type conversion
     - Other JS comparisons do allow coercion
-- */
+- The === comparison does have some nuance to it- designed to LIE in two cases:
+*/
+NaN === NaN //false
+0 === -0 //true
+
+/**
+For NaN comparisons, use Number.isNaN(...)
+- For -0 comparison, use Object.is(...) utility
+    - Object.is(....) is really really strict comparison (quadruple equals)
+
+- Comparison of object values gets even more complicated:   */
+
+[1, 2, 3] === [1, 2, 3]; //false
+{ a: 42 } === { a: 42 } //false
+(x => x*2) === (x => x*2) //false
+
+/**
+-JS does not use structural equality for object values, but instead uses identity equality for objects
+    - In JS, all object values are held by reference, and are COMPARED by their reference
+    - So, [1, 2, 3] and [1, 2, 3] do NOT have the same reference, they are different instances 
+    
+- Remember, comparing objects switches to using an object's IDENTITY*/
 
 
 
