@@ -377,4 +377,44 @@ howdy("Grant");
 
  homework.topic; //"JS" KEY - assignment of value only happens on respective object
  
+/**
+- Assigning to topic creates a property of that name on otherHomework object
+    - No effect on homework object
+- "topic" value on otherHomework - shadows property of same name on homework object in chain
 
+THIS REVISITED
+- Powers prototype-delegated function calls
+- Function calls on objects that delegate onto prototype chain will still have
+the expected use of "this"
+- Consider:
+*/
+
+var homework = {
+    study() {
+        console.log(`Please study ${this.topic}`);
+    }
+};
+
+var jsHomework = Object.create(homework);
+jsHomework.topic = "JS";
+jsHomework.study(); //Returns "please study JS"
+
+var mathHomework = Object.create(homework);
+mathHomework.topic = "Math";
+mathHomework.study(); //Please study Math
+
+/**
+- Both jsHomework and mathHomework objects prototype link to the homework object
+    - Homework object has the study() function
+- study() method references this.topic, which correctly references the topic value of the new objects
+    - this.topic for jsHomework will be "JS"
+    - this.topic for mathHomework will be "Math"
+    - "this" keyword does NOT maintain reference to homework object
+    
+- ABOVE shows that "this" keyword is dynamic in JavaScript - allows it to work in classes and prototype delegation
+
+ASKING WHY?
+- Take away from this chapter - much more under hood of JS than glancing at the surface
+- Important skill - asking "why" when encountering something in the language
+    - Always try to ask the right questions
+ */
