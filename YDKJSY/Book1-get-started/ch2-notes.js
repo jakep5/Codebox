@@ -204,6 +204,324 @@ For NaN comparisons, use Number.isNaN(...)
     - So, [1, 2, 3] and [1, 2, 3] do NOT have the same reference, they are different instances 
     
 - Remember, comparing objects switches to using an object's IDENTITY*/
+/*
 
+/**
+COERCIVE COMPARISONS
+- Coercion - one type is being converted to its respective 
+representation in another type
+    - But, coercion brings up confusion when dealing with comparisons
+- Many JS writings condemn the use of '=='
+    - Referred to as the 'loose equality' operator
+- Misconcepton - performs comparisons without considering the types of compared values
+- KEY - both === and == consider the types of values involved
+    - Between the same value types, == and === do exactly the same thing
+- Difference arises when comparing values of different value types
+    - == allows coercion before comparison, while === does not
+    - == allows coercsion before comparison, then does the same thing as ===
+- KEY: == should be described as 'coercive equality'
+*/
 
+42 == "42"; //true
+1 == true; //true
 
+/**
+- <, >, <=, and >= also allow coercion before comparison
+    -Behave as === if primitive types already match
+*/
+
+var arr = ["1", "10", "100", "1000"];
+for (let i = 0; i< arr.length && arr[i] < 500; i++) {
+    // this will run 3 times
+}
+
+/**
+- i < arr.length comparison is "safe" because i and arr.length are always numbers
+    - BUT, arr[i] < 500 invokes coercion, as arr[i] values are strings
+        -Comparisons will become 1 < 500, 10 < 500, 100 < 500
+- KEY: comparisons between strings, will use alphabetical comparison
+ */
+var x = "10";
+var y = "9";
+
+x < y; //true
+
+/**
+-KEY: learn ins and outs of coercive comparisons, instead of avoiding them
+
+HOW WE ORGANIZE JS
+- Two major patterns for organizing JS: classes and modules
+
+Classes:
+- Class in a program - definition of a 'type' of custom data structure
+    - Includes both data and behaviors that will operate on that data
+    - Classes don't actually define concrete values
+        - Concrete values must be instantiated (with NEW keyword)
+*/
+
+class Page {
+    constructor(text) {
+        this.text = text;
+    }
+
+    print() {
+        console.log(this.text);
+    }
+}
+
+class Notebook {
+    constructor() {
+        this.pages = [];
+    }
+
+    addPage(text) {
+        var page = new Page(text);
+        this.pages.push(page);
+    }
+
+    print() {
+        for (let page of this.pages) {
+            page.print();
+        }
+    }
+}
+
+var mathNotes = new Notebook();
+mathNotes.addPage("Arithmatic: + -...");
+mathNotes.addPage("Trigonometry: sin cos tan...");
+
+mathNotes.print();
+
+/**
+- In Page class, data is stored as a string of text in this.text property
+- In Notebook class, data is an array of instances of the Page class
+- Class methods can only be called on instances of classes, not classes themselves
+- Classes make things more organized/easier to read
+
+CLASS INHERITANCE
+- Inherent to traditional class-orinted design
+*/
+
+class Publication {
+    constructor(title, author, pubDate) {
+        this.title = title;
+        this.author = author;
+        this.pubdate = pubdate;
+    }
+
+    print() {
+        console.log(`
+        Title: ${this.title}
+        By: ${this.author}
+        ${this.pubdate}`)
+    };
+}
+
+class Book extends Publication {
+    constructor(bookDetails) {
+        super(
+            bookDetails.title,
+            bookDetails.author,
+            bookDetails.publishedOn
+        );
+        this.publisher = bookDetails.publisher;
+        this.ISBN = bookDetails.ISBN;
+    }
+
+    print() {
+        super.print();
+        console.log(`
+        Publisher: ${this.publisher}
+        ISBN: ${this.ISBN}`)
+    }
+}
+
+class BlogPost extends Publication {
+    constructor(title, author, pubDate, URL) {
+        super(title, author, pubDate);
+        this.URL = URL;
+    }
+
+    print() {
+        super.print();
+        console.log(this.URL);
+    }
+}
+
+/**
+-Book/BlogPost use extends clause to extend the 
+Publication definition to include additional behavior
+- super(...) call in each constructor will delegate to its
+parent class's (Publication) constructor 
+
+MODULES
+- Module pattern - same goal as the class pattern
+- Modules group data and behavior together into logical units
+- Can include/access behaviors of other modules
+
+Classic Modules
+- ES6 added module syntax to native JS
+- Classic modules, however, have an outer function that
+returns an instance of the module with one or more functions
+that can operate on the module's hidden data
+- Here is the classic module form of earlier Publication, Book, and BlogPost classes:
+*/
+
+function Publication(title, author, pubDate) {
+    var publicAPI = {
+        print() {
+            console.log(`
+            Title: ${title}
+            By: ${author}
+            ${pubDate}
+            `);
+        }
+    };
+
+    return publicAPI;
+}
+
+function Book(bookDetails) {
+    var pub = Publication(
+        bookDetails.title,
+        bookDetails.author,
+        bookDetails.publishedOn
+    );
+
+    var publicAPI = {
+        print() {
+            pub.print();
+            console.log(`
+            Publisher: ${bookDetails.publisher }
+            ISBN: ${ bookDetails.ISBN}
+            `)
+        }
+    }
+
+    return publicAPI;
+}
+
+function BlogPost(title, author, pubDate, URL) {
+    var pub = Publication(title, author, pubDate);
+
+    var publicAPI = {
+        print() {
+            pub.print();
+            console.log(URL);
+        }
+    };
+
+    return publicAPI;
+};
+
+/**
+-Comparing above forms to Classes:
+    - Class form stores methods and data, which are accessed with .this prefix
+    - For modules, methods are accessed as identifier variables, without this. prefix
+    
+    - Classes - 'API' of an instance is implicit in class definition
+        - All data/methods are public
+    - Module factory function - explicitly create and return an object
+        - Data/other methods remain private in the factory function
+
+- Other variations to factory functions:
+    - AMD (Asynchronous Module Definition)
+    - UMD (Universal Module Definition)
+    - CommonJS(node.js style modules)
+    
+- Usage/instantiation of module factory functions*/
+
+var YDKJS = Book({
+    title: "You Don't Know JS",
+    author: "Kyle Simpson",
+    publishedOn: "June 2014",
+    publisher: "O'Reilly",
+    ISBN: "123456-789"
+});
+
+YDKJS.print();
+
+var forAgainstLet = BlogPost(
+    "For and against let",
+    "Kyle Simpson",
+    "October 27, 2014",
+    "https://davidwalsh.name/for-and-against-let"
+);
+
+forAgainstLet.print();
+
+/**
+ES MODULES
+- Serves in similar spirit as classic modules
+
+- Implementation does differ significantly
+- No wrapping function to define a module, wrapping context is a file
+- ESMs are always file-based; one file for one module
+- You use export to add a variable/method to public API
+- Don't instantiate ES module, just import it to a single instance
+- ESM's are singletons - only one instance ever created
+    - Instance created is at the first import
+    - All other imports are references to first import
+    
+- In orer to have multiple instantiations, you must provide a classic module-style factory function in ESM definition
+
+- Here is an example with multiple instantiaion:*/
+
+//In file publication.js:
+
+function printDetails(title, author, pubDate) {
+    console.log(`
+    TitleL ${ title }
+    By: ${ author }
+    ${ pubDate }
+    `)
+}
+
+export function create(title, author, pubDate) {
+    var publicAPI = {
+        print() {
+            printDetails(title, author, pubDate);
+        }
+    };
+
+    return publicAPI;
+}
+
+//In blogpost.js (importing and using module)
+
+import {create as createPub} from "publication.js";
+
+function printDetails(pub, URL) {
+    pub.print();
+    console.log(URL);
+}
+
+export function create(title, author, pubDate, URL) {
+    var pub = createPub(title, author, pubDate);
+
+    var publicAPI = {
+        print() {
+            printDetails(pub, URL);
+        }
+    };
+
+    return publicAPI;
+}
+
+//In main.js
+
+import { create as newBlogPost } from "blogpost.js";
+
+var forAgainstLet = newBlogpost(
+    "For and against let",
+    "Kyle Simpson",
+    "October 27, 2014",
+    "https://davidwalsh.name/for-and-against-let"
+)
+
+forAgainstLet.print();
+
+/**
+- ES modules can use classic modules internally if they need to
+suppoert multiple-instantiation
+-    */
